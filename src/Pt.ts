@@ -20,11 +20,17 @@ export class Pt extends Float32Array implements IPt, Iterable<number> {
    * @param args a list of numeric parameters, an array of numbers, or an object with {x,y,z,w} properties
    */
   constructor(...args) {
+    let arg;
+
     if (args.length === 1 && typeof args[0] == "number") {
-      super( args[0] ); // init with the TypedArray's length. Needed this in order to make ".map", ".slice" etc work.
+      arg = args[0]; // init with the TypedArray's length. Needed this in order to make ".map", ".slice" etc work.
     } else {
-      super( (args.length>0) ? Util.getArgs(args) : [0,0] );
-    }    
+      arg = args.length > 0 ? Util.getArgs(args) : [0, 0];
+    }
+
+    // Workaround for transpilation issue w/react-scripts that leads to infinite loop.
+    // @see https://github.com/pixijs/pixijs/pull/9093
+    super(arg);
   }
 
 

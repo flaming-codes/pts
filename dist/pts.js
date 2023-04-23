@@ -1,4 +1,4 @@
-/* Copyright © 2017-2022 William Ngan and contributors.
+/* Copyright © 2017-2023 William Ngan and contributors.
 Licensed under Apache 2.0 License.
 See https://github.com/williamngan/pts for details. */
 (() => {
@@ -2070,14 +2070,13 @@ See https://github.com/williamngan/pts for details. */
   // src/Pt.ts
   var Pt = class extends Float32Array {
     constructor(...args) {
-      var __super = (...args) => {
-        super(...args);
-      };
+      let arg;
       if (args.length === 1 && typeof args[0] == "number") {
-        __super(args[0]);
+        arg = args[0];
       } else {
-        __super(args.length > 0 ? Util.getArgs(args) : [0, 0]);
+        arg = args.length > 0 ? Util.getArgs(args) : [0, 0];
       }
+      super(arg);
     }
     static make(dimensions, defaultValue = 0, randomize = false) {
       let p = new Float32Array(dimensions);
@@ -6089,6 +6088,7 @@ See https://github.com/williamngan/pts for details. */
       this._gravity = new Pt();
       this._friction = 1;
       this._damping = 0.75;
+      this._iterations = 1;
       this._particles = [];
       this._bodies = [];
       this._pnames = [];
@@ -6121,6 +6121,12 @@ See https://github.com/williamngan/pts for details. */
     }
     set damping(f) {
       this._damping = f;
+    }
+    get iterations() {
+      return this._iterations;
+    }
+    set iterations(f) {
+      this._iterations = f;
     }
     get bodyCount() {
       return this._bodies.length;
@@ -6258,7 +6264,9 @@ See https://github.com/williamngan/pts for details. */
           for (let m = 0, mlen = this._particles.length; m < mlen; m++) {
             bds.processParticle(this._particles[m]);
           }
-          bds.processEdges();
+          for (let i2 = 0; i2 < this._iterations; i2++) {
+            bds.processEdges();
+          }
           if (this._drawBodies)
             this._drawBodies(bds, i);
         }

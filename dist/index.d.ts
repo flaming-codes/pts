@@ -1209,6 +1209,7 @@ declare class World {
     protected _gravity: Pt;
     protected _friction: number;
     protected _damping: number;
+    protected _iterations: number;
     protected _bound: Bound;
     protected _particles: Particle[];
     protected _bodies: Body[];
@@ -1225,6 +1226,8 @@ declare class World {
     set friction(f: number);
     get damping(): number;
     set damping(f: number);
+    get iterations(): number;
+    set iterations(f: number);
     get bodyCount(): number;
     get particleCount(): number;
     body(id: number | string): any;
